@@ -1,0 +1,13 @@
+name: My First Robot # Имя нашего робота
+
+on: [push] # Событие: запускаться каждый раз, когда мы сохраняем (пушим) код
+
+jobs:
+  check-site: # Название задачи
+    runs-on: ubuntu-latest # На каком компьютере запустить (выбираем бесплатный Linux)
+    steps:
+      - name: Get Code # Шаг 1: Копируем код из репозитория на этот компьютер
+        uses: actions/checkout@v4
+
+      - name: Simple Test # Шаг 2: Проверяем, есть ли в файле слово "поход"
+        run: grep "поход" index.html
