@@ -1,0 +1,47 @@
+<style>
+  body {
+    /* Фоновое изображение (пиксельный пейзаж) */
+    background-image: url('https://img.freepik.com/free-photo/view-beautiful-rainbow-nature-landscape_23-2151597605.jpg');
+    background-size: cover;       /* Растянуть на весь экран */
+    background-attachment: fixed; /* Фон не прокручивается */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;                 /* Цвет текста, чтобы его было видно */
+    text-align: center;
+    padding-top: 50px;
+  }
+  
+  .content-box {
+    background: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон для текста */
+    display: inline-block;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  button {
+    background-color: #ff4757;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.1); /* Кнопка немного увеличивается */
+  }
+</style>
+
+<div class="content-box">
+  <h1>Моя супер-страница!</h1>
+  <p>Теперь здесь есть фоновая картинка и стильный блок.</p>
+  
+  <!-- Картинка котика-программиста -->
+  <img src="https://img.freepik.com/premium-photo/scenic-view-lake-against-sky_1048944-18804274.jpg?semt=ais_hybrid&w=740&q=80" 
+       alt="Coding Cat" width="250" style="border-radius: 10px; margin: 20px 0;">
+  
+  <br>
+  <button onclick="alert('Вы молодец! Это уже настоящий фронтенд.')">Нажми на меня</button>
+</div>
+
