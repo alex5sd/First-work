@@ -1,24 +1,25 @@
-name: Artifacts Collector
+name: Production Packer
 
 on: [push]
 
 jobs:
-  build-tour:
+  pack-dombay:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Generate Ticket
+      - name: Create Production Folder
         run: |
-          echo "=== ТВОЯ ПУТЕВКА НА ДОМБАЙ ===" > ticket.txt
-          echo "Локация: Домбай" >> ticket.txt
-          echo "Статус: Оплачено" >> ticket.txt
-          echo "Дата генерации: $(date)" >> ticket.txt
+          # Создаем папку для отправки
+          mkdir build_folder
+          # Копируем туда наш сайт
+          cp index.html build_folder/
+          # Создаем там файл с информацией о версии
+          echo "Версия: 1.0.0. $(date)" > build_folder/version.txt
 
-      - name: Upload Ticket
-        # Специальный официальный экшен для сохранения файлов
+      - name: Upload Website Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: tour-ticket # Имя архива
-          path: ticket.txt  # Какой файл сохранить
+          name: dombay-website-v1.0 # Название нашего "продукта"
+          path: build_folder/       # Загружаем не один файл, а целую папку!
