@@ -1,25 +1,18 @@
-name: Production Packer
+name: Docker Master
 
 on: [push]
 
 jobs:
-  pack-dombay:
+  build-container:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Create Production Folder
-        run: |
-          # Создаем папку для отправки
-          mkdir build_folder
-          # Копируем туда наш сайт
-          cp index.html build_folder/
-          # Создаем там файл с информацией о версии
-          echo "Версия: 1.0.0. $(date)" > build_folder/version.txt
+      - name: Build My Image
+        # Это команда Docker. Она читает Dockerfile и собирает образ.
+        # -t (tag) — это имя нашей "коробки"
+        run: docker build -t dombay-site:v1 .
 
-      - name: Upload Website Bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: dombay-website-v1.0 # Название нашего "продукта"
-          path: build_folder/       # Загружаем не один файл, а целую папку!
+      - name: Check Success
+        run: echo "Образ собран! Наш Домбай теперь внутри контейнера."
