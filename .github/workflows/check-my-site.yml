@@ -1,28 +1,55 @@
-name: CI Pipeline
+name: Check Index HTML Content
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - index.html
+  pull_request:
+    paths:
+      - index.html
 
 jobs:
-  check-html:
+  validate-index-content:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check index.html exists
+      - name: Check if index.html exists
+        id: check_file
         run: |
-          if [ ! -f index.html ]; then
-            echo "index.html not found"
-            exit 1
+          if [ -f "index.html" ]; then
+            echo "file_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "file_exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check index.html is not empty
+      - name: Fail if index.html is missing
+        if: steps.check_file.outputs.file_exists == 'false'
         run: |
-          if [ ! -s index.html ]; then
-            echo "index.html is empty"
-            exit 1
+          echo "❌ Файл index.html не найден в корне репозитория."
+          exit 1
+
+      - name: Read index.html and check for text content
+        id: check_content
+        run: |
+          # Извлекаем текстовое содержимое, удаляя HTML-теги
+          TEXT_CONTENT=$(cat index.html | sed -E 's/<[^>]+>//g' | tr -d ' \t\n\r' | sed 's/&nbsp;//g')
+          if [ -z "$TEXT_CONTENT" ]; then
+            echo "has_text=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_text=true" >> $GITHUB_OUTPUT
           fi
+
+      - name: Fail if index.html has no text
+        if: steps.check_content.outputs.has_text == 'false'
+        run: |
+          echo "❌ Файл index.html существует, но не содержит видимого текстового контента."
+          echo "CI не пройден. Добавьте текст в index.html."
+          exit 1
+
+      - name: Success
+        if: steps.check_content.outputs.has_text == 'true'
+        run: |
+          echo "✅ index.html содержит текст. Проверка пройдена."
