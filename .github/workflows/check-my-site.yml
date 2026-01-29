@@ -1,24 +1,24 @@
-name: Security Pro
+name: Artifacts Collector
 
 on: [push]
 
 jobs:
-  secure-check:
+  build-tour:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Check Password
-        env:
-          MY_PASS: ${{ secrets.TOUR_PASSWORD }}
+      - name: Generate Ticket
         run: |
-          echo "Пытаемся напечатать секрет для проверки:"
-          echo "Мой пароль: $MY_PASS"
-          
-          if [ "$MY_PASS" == "Dombay2025" ]; then
-            echo "Доступ разрешен! Поход на Домбай подтвержден."
-          else
-            echo "ДОСТУП ЗАПРЕЩЕН: Пароль неверный!"
-            exit 1
-          fi
+          echo "=== ТВОЯ ПУТЕВКА НА ДОМБАЙ ===" > ticket.txt
+          echo "Локация: Домбай" >> ticket.txt
+          echo "Статус: Оплачено" >> ticket.txt
+          echo "Дата генерации: $(date)" >> ticket.txt
+
+      - name: Upload Ticket
+        # Специальный официальный экшен для сохранения файлов
+        uses: actions/upload-artifact@v4
+        with:
+          name: tour-ticket # Имя архива
+          path: ticket.txt  # Какой файл сохранить
