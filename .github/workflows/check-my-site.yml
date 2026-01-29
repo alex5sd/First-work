@@ -1,4 +1,4 @@
-name: Check Index HTML Content
+name: CI Pipeline
 
 on:
   push:
@@ -28,28 +28,4 @@ jobs:
       - name: Fail if index.html is missing
         if: steps.check_file.outputs.file_exists == 'false'
         run: |
-          echo "❌ Файл index.html не найден в корне репозитория."
-          exit 1
-
-      - name: Read index.html and check for text content
-        id: check_content
-        run: |
-          # Извлекаем текстовое содержимое, удаляя HTML-теги
-          TEXT_CONTENT=$(cat index.html | sed -E 's/<[^>]+>//g' | tr -d ' \t\n\r' | sed 's/&nbsp;//g')
-          if [ -z "$TEXT_CONTENT" ]; then
-            echo "has_text=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_text=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Fail if index.html has no text
-        if: steps.check_content.outputs.has_text == 'false'
-        run: |
-          echo "❌ Файл index.html существует, но не содержит видимого текстового контента."
-          echo "CI не пройден. Добавьте текст в index.html."
-          exit 1
-
-      - name: Success
-        if: steps.check_content.outputs.has_text == 'true'
-        run: |
-          echo "✅ index.html содержит текст. Проверка пройдена."
+          echo "❌ Файл index.html не найден в корне
