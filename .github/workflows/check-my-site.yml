@@ -9,23 +9,15 @@ on:
       - index.html
 
 jobs:
-  validate-index-content:
+  force-fail-ci:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Check if index.html exists
-        id: check_file
+      - name: Информация о запуске
         run: |
-          if [ -f "index.html" ]; then
-            echo "file_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "file_exists=false" >> $GITHUB_OUTPUT
-          fi
+          echo "🔄 CI запущен. Сейчас будет принудительный сбой."
 
-      - name: Fail if index.html is missing
-        if: steps.check_file.outputs.file_exists == 'false'
+      - name: ❌ Принудительный провал CI
         run: |
-          echo "❌ Файл index.html не найден в корне
+          echo "🔥 Этот CI намеренно завершается с ошибкой."
+          echo "🚫 Разработка остановлена. CD не будет запущен."
+          exit 1
