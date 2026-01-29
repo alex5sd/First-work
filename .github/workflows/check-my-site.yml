@@ -1,0 +1,30 @@
+name: Variables Expert
+
+on: [push]
+
+jobs:
+  check-vars:
+    runs-on: ubuntu-latest
+    # Мы объявляем переменные для этого Job
+    env:
+      TARGET: ${{ vars.DESTINATION }}
+      DURATION: ${{ vars.DAYS }}
+      
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+
+      - name: Dynamic Check
+        run: |
+          echo "Проверяем локацию: $TARGET"
+          # Проверяем, совпадает ли локация в HTML с нашей переменной
+          grep "$TARGET" index.html
+          
+          echo "Проверяем длительность: $DURATION дней"
+          # Ищем цифру из переменной в тексте HTML
+          grep "$DURATION-дневный" index.html
+
+      - name: Secret Greeting
+        run: |
+          echo "Инструкция для группы:"
+          echo "Мы отправляемся в $TARGET на $DURATION дней!"
