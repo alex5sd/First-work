@@ -1,39 +1,30 @@
-name: Linux Inspector
+name: Variables Expert
 
 on: [push]
 
 jobs:
-  inspect-dombay:
+  check-vars:
     runs-on: ubuntu-latest
+    # Мы объявляем переменные для этого Job
+    env:
+      TARGET: ${{ vars.DESTINATION }}
+      DURATION: ${{ vars.DAYS }}
+      
     steps:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Check Content
+      - name: Dynamic Check
         run: |
-          echo "--- Начинаем проверку файла index.html ---"
+          echo "Проверяем локацию: $TARGET"
+          # Проверяем, совпадает ли локация в HTML с нашей переменной
+          grep "$TARGET" index.html
           
-          # 1. Проверяем слово "поход" (используем твой маркер)
-          grep "поход" index.html
-          
-          # 2. Проверяем, есть ли в коде ссылка на картинку с озером (img)
-          grep "lake" index.html
-          
-          # 3. Проверяем, не забыл ли ты закрыть тег </div>
-          # Команда 'wc -l' посчитает количество строк в результате
-          echo "Количество закрывающих тегов div:"
-          grep "</div>" index.html | wc -l
+          echo "Проверяем длительность: $DURATION дней"
+          # Ищем цифру из переменной в тексте HTML
+          grep "$DURATION-дневный" index.html
 
-      - name: Security Check
+      - name: Secret Greeting
         run: |
-          # Проверяем права доступа к файлу. 
-          # В Linux 'ls -l' покажет, можно ли этот файл читать/менять
-          ls -l index.html
-          
-      - name: Report
-        run: |
-          # Создаем отчет программным путем
-          echo "Отчет от $(date)" > report.txt
-          echo "Автор: $(whoami)" >> report.txt
-          echo "Проверка Домбая пройдена успешно!" >> report.txt
-          cat report.txt
+          echo "Инструкция для группы:"
+          echo "Мы отправляемся в $TARGET на $DURATION дней!"
