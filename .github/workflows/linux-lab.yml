@@ -1,0 +1,17 @@
+name: Linux Learning Lab
+on: [push]
+
+jobs:
+  terminal-basics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Navigation Commands
+        run: |
+          echo "1. Кто залогинен в системе?"
+          whoami
+          
+          echo "2. В какой папке я сейчас нахожусь?"
+          pwd
+          
+          echo "3. Посмотри на 'корень' всей системы (главный склад)"
+          ls /
