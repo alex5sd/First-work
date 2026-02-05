@@ -1,9 +1,9 @@
-name: Docker Master & CD
+name: Docker Date Versioning
 
 on: [push]
 
 jobs:
-  build-and-test:
+  build-and-push:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -12,26 +12,19 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Login to GitHub Registry
+      - name: Login to Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and Push
+      - name: Build and Push with Date
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/dombay-site:v1
+          # 1. Создаем переменную с текущей датой
+          TAG=$(date +%Y%m%d-%H%M)
+          
+          # 2. Формируем полное имя образа с этой датой
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/dombay-site:$TAG
+          
+          echo "Собираю образ с тегом: $TAG"
+          
+          # 3. Собираем и пушим
           docker build -t $IMAGE_ID .
           docker push $IMAGE_ID
-
-      - name: Test Run (Simulation of CD)
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/dombay-site:v1
-          # 1. Запускаем контейнер в фоновом режиме на порту 8080
-          docker run -d -p 8080:80 --name my-running-site $IMAGE_ID
-          
-          # 2. Даем ему 5 секунд "проснуться"
-          sleep 5
-          
-          # 3. Пытаемся "стукнуть" в него командой curl (как будто заходим в браузере)
-          # Если сайт ответит текстом про "поход" — значит деплой успешен!
-          curl localhost:8080 | grep "поход"
-          
-          echo "СИСТЕМА ЖИВА! Сайт успешно запущен из контейнера."
