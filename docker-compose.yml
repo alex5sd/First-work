@@ -1,0 +1,14 @@
+version: '3.8' # Версия формата
+
+services:
+  # Наш основной сайт про Домбай
+  main-site:
+    image: ghcr.io/${GITHUB_USER}/dombay-site:latest # Мы будем использовать тег latest
+    ports:
+      - "8081:80" # Он будет доступен на порту 8081
+
+  # Резервная копия сайта
+  backup-site:
+    image: ghcr.io/${GITHUB_USER}/dombay-site:latest
+    ports:
+      - "8082:80" # Он будет доступен на порту 8082
