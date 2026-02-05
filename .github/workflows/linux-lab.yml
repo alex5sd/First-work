@@ -31,10 +31,13 @@ jobs:
           mkdir archive
           
           echo "9. Создаю внутри папки файл log.txt"
-          touch log.txt  
+          touch archive/log.txt  
           
           echo "10. Записываю фразу"
-          echo "Проверка пройдена" > log.txt
+          echo "Проверка пройдена" > archive/log.txt
           
-          echo "11. Вывожу содержимое файла"
-          cat log.txt
+          echo "11. Проверяю: что сейчас лежит в папке archive?"
+          ls archive
+          
+          echo "12. Вывожу содержимое файла из папки"
+          cat archive/log.txt
