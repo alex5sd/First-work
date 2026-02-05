@@ -26,4 +26,15 @@ jobs:
           
           echo "7. Читаем, что получилось"
           cat note.txt
-
+          
+          echo "8. Создаю папку с названием archive"
+          mkdir archive
+          
+          echo "9. Создаю внутри папки файл log.txt"
+          touch log.txt  
+          
+          echo "10. Записываю фразу"
+          echo "Проверка пройдена" > log.txt
+          
+          echo "11. Вывожу содержимое файла"
+          cat log.txt
