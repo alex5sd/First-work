@@ -1,9 +1,9 @@
-name: Docker Date Versioning
+name: Docker Compose Master
 
 on: [push]
 
 jobs:
-  build-and-push:
+  orchestrate:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -15,16 +15,33 @@ jobs:
       - name: Login to Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and Push with Date
+      - name: Build and Push Dual Tag
         run: |
-          # 1. Создаем переменную с текущей датой
+          # 1. Создаем теги
           TAG=$(date +%Y%m%d-%H%M)
+          IMAGE_DATE=ghcr.io/${{ github.repository_owner }}/dombay-site:$TAG
+          IMAGE_LATEST=ghcr.io/${{ github.repository_owner }}/dombay-site:latest
           
-          # 2. Формируем полное имя образа с этой датой
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/dombay-site:$TAG
+          # 2. Собираем образ и даем ему сразу два имени
+          docker build -t $IMAGE_DATE -t $IMAGE_LATEST .
           
-          echo "Собираю образ с тегом: $TAG"
+          # 3. Пушим оба
+          docker push $IMAGE_DATE
+          docker push $IMAGE_LATEST
+
+      - name: Run Orchestration
+        run: |
+          # Запускаем наш файл из корня проекта
+          docker-compose up -d
           
-          # 3. Собираем и пушим
-          docker build -t $IMAGE_ID .
-          docker push $IMAGE_ID
+          # Даем 5 секунд проснуться
+          sleep 5
+          
+          echo "--- ПРОВЕРКА ПОРТА 8081 ---"
+          curl localhost:8081 | grep "поход"
+          
+          echo "--- ПРОВЕРКА ПОРТА 8082 ---"
+          curl localhost:8082 | grep "поход"
+
+      - name: Show Containers List
+        run: docker ps
