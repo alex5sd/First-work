@@ -32,7 +32,7 @@ jobs:
       - name: Run Orchestration
         run: |
           # Запускаем наш файл из корня проекта
-          docker-compose up -d
+          docker compose up -d
           
           # Даем 5 секунд проснуться
           sleep 5
