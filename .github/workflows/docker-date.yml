@@ -31,10 +31,9 @@ jobs:
 
       - name: Run Orchestration
         run: |
-          # Запускаем наш файл из корня проекта
-          docker compose up -d
+          # Флаг -f говорит: "Возьми именно этот файл конфигурации"
+          docker compose -f docker-compose.yml up -d
           
-          # Даем 5 секунд проснуться
           sleep 5
           
           echo "--- ПРОВЕРКА ПОРТА 8081 ---"
@@ -42,6 +41,7 @@ jobs:
           
           echo "--- ПРОВЕРКА ПОРТА 8082 ---"
           curl localhost:8082 | grep "поход"
+
 
       - name: Show Containers List
         run: docker ps
